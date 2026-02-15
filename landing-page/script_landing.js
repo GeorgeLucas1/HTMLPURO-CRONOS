@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════
-//  CRONOS — script_landing.js  (versão corrigida)
+//  CRONOS — script_landing.js
 // ══════════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -111,10 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const total   = slides.length;
     const visible = 3;
 
-    // Garante que o primeiro slide começa como active
     slides.forEach((s, i) => s.classList.toggle('active', i === 0));
 
-    // Constrói dots
     for (let i = 0; i < total; i++) {
       const d = document.createElement('div');
       d.className = 'cc-dot' + (i === 0 ? ' active' : '');
@@ -124,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function goSlide(n) {
       slides[current].classList.remove('active');
-      current = ((n % total) + total) % total;   // ← wrap seguro sem NaN
+      current = ((n % total) + total) % total;
       slides[current].classList.add('active');
 
       const slideW = 344;
@@ -147,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── HOW IT WORKS ──
-  const steps = document.querySelectorAll('.how-step');
+  const steps  = document.querySelectorAll('.how-step');
   const panels = document.querySelectorAll('.visual-panel');
 
   if (steps.length) {
@@ -160,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // auto-cycle
     let howIdx = 0;
     setInterval(() => {
       howIdx = (howIdx + 1) % steps.length;
@@ -190,10 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const step = 16;
       const inc  = target / (dur / step);
 
-      // Sufixo correto para cada métrica
-      const suffix = target === 3 ? '×'
-                   : target === 87 ? '%'
-                   : target === 40 ? '%'
+      const suffix = target === 3   ? '×'
+                   : target === 87  ? '%'
+                   : target === 40  ? '%'
                    : target === 100 ? '%'
                    : '';
 
@@ -209,4 +205,101 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.metric-card').forEach(c => numObserver.observe(c));
 
+  // ── AUTH MODAL: fechar ao clicar no overlay ──
+  const overlay = document.getElementById('authOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeAuth();
+    });
+  }
+
+  // ── ESC fecha o modal ──
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuth(); });
+
+  // ── TABS click ──
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+  });
+
+  // ── Botão fechar ──
+  const closeBtn = document.getElementById('authClose');
+  if (closeBtn) closeBtn.addEventListener('click', closeAuth);
+
 }); // fim DOMContentLoaded
+
+// ══════════════════════════════════════════════
+//  AUTH — funções globais (chamadas via onclick)
+// ══════════════════════════════════════════════
+
+function openAuth(tab = 'login') {
+  const overlay = document.getElementById('authOverlay');
+  if (!overlay) return;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  switchTab(tab);
+  // reset painel de redefinição
+  const rf = document.getElementById('resetForm');
+  const rs = document.getElementById('resetSuccess');
+  if (rf) rf.style.display = 'block';
+  if (rs) rs.classList.remove('show');
+}
+
+function closeAuth() {
+  const overlay = document.getElementById('authOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.auth-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.tab === tabId)
+  );
+  showPanel(tabId);
+}
+
+function showPanel(panelId) {
+  const map = { login: 'panelLogin', register: 'panelRegister', reset: 'panelReset' };
+  const targetId = map[panelId] || panelId;
+  document.querySelectorAll('.auth-panel').forEach(p => {
+    p.classList.toggle('active', p.id === targetId);
+  });
+  // ao ir para reset, remove destaque das tabs
+  if (panelId === 'reset') {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  }
+}
+
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const showing = input.type === 'password';
+  input.type = showing ? 'text' : 'password';
+  btn.innerHTML = showing
+    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+    : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
+
+function checkStrength(input) {
+  const val = input.value;
+  let score = 0;
+  if (val.length >= 8)          score++;
+  if (/[A-Z]/.test(val))        score++;
+  if (/[0-9]/.test(val))        score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const bars = ['sb1', 'sb2', 'sb3', 'sb4'];
+  const cls  = score <= 1 ? 's1' : score <= 2 ? 's2' : 's3';
+  bars.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'auth-strength-bar' + (i < score ? ' ' + cls : '');
+  });
+}
+
+function sendReset() {
+  const rf = document.getElementById('resetForm');
+  const rs = document.getElementById('resetSuccess');
+  if (rf) rf.style.display = 'none';
+  if (rs) rs.classList.add('show');
+}
