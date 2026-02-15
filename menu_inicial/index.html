@@ -11,7 +11,9 @@
 <body>
 <canvas id="bg-canvas"></canvas>
 <div class="toast-container" id="toastContainer"></div>
+
 <div class="app">
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <svg class="logo-ring" viewBox="0 0 38 38" fill="none">
@@ -23,7 +25,7 @@
         <line x1="4" y1="19" x2="7" y2="19" stroke="#fff7ab" stroke-width="1.2"/>
         <line x1="31" y1="19" x2="34" y2="19" stroke="#fff7ab" stroke-width="1.2"/>
       </svg>
-      <div class="logo-name">CRONOS<small>CRONOS,USANDO O TEMPO AO SEU FAVOR</small></div>
+      <div class="logo-name">CRONOS<small>USANDO O TEMPO AO SEU FAVOR</small></div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Principal</div>
@@ -45,28 +47,65 @@
       </a>
     </div>
     <div class="sidebar-bottom">
-      <div class="user-chip">
+      <div class="user-chip" id="userChipBtn">
         <div class="user-avatar" id="loggedAvatar">GL</div>
         <div class="user-info">
           <div class="user-name" id="loggedName">George L.</div>
-          <div class="user-role">Admin · Cronos</div>
+          <div class="user-role" id="loggedRole">Admin · Cronos</div>
         </div>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9580b8" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </div>
     </div>
   </aside>
+
   <div class="main">
+    <!-- TOPBAR -->
     <header class="topbar">
       <div class="topbar-left">
         <h1 id="topbarTitle">Dashboard</h1>
         <p>Visão geral · <span id="topbarDate"></span></p>
       </div>
       <div class="topbar-right">
-        <div class="notif-btn"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><div class="notif-dot"></div></div>
-        <button class="btn btn-primary" id="btnNovoProj"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo Projeto</button>
+        <!-- NOTIFICATION BUTTON + PANEL -->
+        <div class="notif-wrapper">
+          <div class="notif-btn">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <div class="notif-dot"></div>
+            <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+          </div>
+          <!-- NOTIFICATION PANEL -->
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-header">
+              <div class="notif-panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                Notificações
+              </div>
+              <button class="btn btn-ghost btn-sm" id="btnMarkAllRead">Marcar todas</button>
+            </div>
+            <div class="notif-panel-hint">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+              Pronto para conectar via FastAPI
+            </div>
+            <div class="notif-panel-list" id="notifPanelList">
+              <div class="notif-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                <p>Nenhuma notificação</p>
+                <small>As notificações aparecerão aqui quando conectado à API</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="btnNovoProj">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Projeto
+        </button>
       </div>
     </header>
+
+    <!-- CONTENT VIEWS -->
     <div class="content">
+      <!-- DASHBOARD -->
       <div class="view active" id="view-dashboard">
         <div class="kpi-grid" id="kpiGrid"></div>
         <div class="dash-grid">
@@ -97,6 +136,8 @@
           </div>
         </div>
       </div>
+
+      <!-- PROJETOS -->
       <div class="view" id="view-projetos">
         <div class="task-filters">
           <button class="btn btn-primary" id="btnNovoProjView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo Projeto</button>
@@ -104,6 +145,8 @@
         </div>
         <div class="proj-full-grid" id="projFullGrid"></div>
       </div>
+
+      <!-- TAREFAS -->
       <div class="view" id="view-tarefas">
         <div class="task-filters">
           <button class="btn btn-primary" id="btnNovaTarefa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova Tarefa</button>
@@ -116,6 +159,8 @@
           <div class="task-col"><div class="task-col-header"><span class="task-col-title" style="color:var(--verde)">✓ Concluído</span><span class="task-count" id="countDone">0</span></div><div class="task-items" id="colDone"></div></div>
         </div>
       </div>
+
+      <!-- MEMBROS -->
       <div class="view" id="view-membros">
         <div class="task-filters">
           <button class="btn btn-primary" id="btnNovoMembro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Adicionar Membro</button>
@@ -126,7 +171,9 @@
   </div>
 </div>
 
-<!-- MODAIS -->
+<!-- ════════════ MODAIS ════════════ -->
+
+<!-- MODAL PROJETO -->
 <div class="modal-overlay" id="modalProj">
   <div class="modal">
     <div class="modal-header"><div class="modal-title" id="modalProjTitle">✦ Novo Projeto</div><div class="modal-close" data-close="modalProj">✕</div></div>
@@ -156,6 +203,7 @@
   </div>
 </div>
 
+<!-- MODAL TAREFA -->
 <div class="modal-overlay" id="modalTarefa">
   <div class="modal">
     <div class="modal-header"><div class="modal-title" id="modalTarefaTitle">✦ Nova Tarefa</div><div class="modal-close" data-close="modalTarefa">✕</div></div>
@@ -174,6 +222,7 @@
   </div>
 </div>
 
+<!-- MODAL MEMBRO -->
 <div class="modal-overlay" id="modalMembro">
   <div class="modal">
     <div class="modal-header"><div class="modal-title" id="modalMembroTitle">✦ Adicionar Membro</div><div class="modal-close" data-close="modalMembro">✕</div></div>
@@ -184,13 +233,69 @@
     </div>
     <div class="form-group"><label>E-mail</label><input type="email" id="membroEmail" placeholder="joao@email.com"/></div>
     <div class="form-row">
+      <div class="form-group"><label>Matrícula <span style="color:var(--texto-dim);font-weight:400">(opcional)</span></label><input type="text" id="membroMatricula" placeholder="Ex: 00142"/></div>
       <div class="form-group"><label>Cargo / Função</label><select id="membroRole"><option>Dev Frontend</option><option>Dev Backend</option><option>Dev Fullstack</option><option>Designer UX/UI</option><option>Data Engineer</option><option>DevOps</option><option>Product Manager</option><option>QA Engineer</option><option>Tech Lead</option><option>Outro</option></select></div>
-      <div class="form-group"><label>Cor do avatar</label><select id="membroColor"><option value="linear-gradient(135deg,#8b00e8,#5710d1)">Roxo</option><option value="linear-gradient(135deg,#0070e8,#00b4d8)">Azul</option><option value="linear-gradient(135deg,#00a855,#4fffb0)">Verde</option><option value="linear-gradient(135deg,#c47a00,#ffd84f)">Dourado</option><option value="linear-gradient(135deg,#a00030,#ff5e7e)">Vermelho</option><option value="linear-gradient(135deg,#006080,#5ec4ff)">Ciano</option></select></div>
     </div>
-    <div class="modal-actions"><button class="btn btn-ghost" data-close="modalMembro">Cancelar</button><button class="btn btn-primary" id="btnSalvarMembro">Adicionar</button></div>
+    <div class="form-group"><label>Cor do avatar</label><select id="membroColor"><option value="linear-gradient(135deg,#8b00e8,#5710d1)">Roxo</option><option value="linear-gradient(135deg,#0070e8,#00b4d8)">Azul</option><option value="linear-gradient(135deg,#00a855,#4fffb0)">Verde</option><option value="linear-gradient(135deg,#c47a00,#ffd84f)">Dourado</option><option value="linear-gradient(135deg,#a00030,#ff5e7e)">Vermelho</option><option value="linear-gradient(135deg,#006080,#5ec4ff)">Ciano</option></select></div>
+    <!-- Hash display (only when editing) -->
+    <div id="membroHashGroup" style="display:none">
+      <div class="hash-info-box">
+        <span class="hash-icon-lg">⬡</span>
+        <div>
+          <div style="font-size:.7rem;color:var(--texto-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Hash único do membro</div>
+          <div style="font-family:monospace;font-size:.8rem;color:var(--neon)" id="membroHashDisplay">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" data-close="modalMembro">Cancelar</button><button class="btn btn-primary" id="btnSalvarMembro">Adicionar & Convidar</button></div>
   </div>
 </div>
 
+<!-- MODAL PERFIL -->
+<div class="modal-overlay" id="modalProfile">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✦ Meu Perfil</div>
+      <div class="modal-close" data-close="modalProfile">✕</div>
+    </div>
+    <div class="profile-avatar-section">
+      <div class="profile-avatar-preview" id="profileAvatarPreview">GL</div>
+      <div>
+        <div style="font-size:.75rem;color:var(--texto-dim);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em">Hash da conta</div>
+        <div class="hash-info-box" style="padding:.4rem .7rem">
+          <span class="hash-icon-lg" style="font-size:1rem">⬡</span>
+          <div>
+            <div style="font-family:monospace;font-size:.75rem;color:var(--neon)" id="profileHashDisplay">—</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btnRegenHash" style="margin-left:.5rem">↻ Novo</button>
+        </div>
+        <div style="font-size:.68rem;color:var(--texto-dim);margin-top:.3rem">Usado para identificação na API</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Nome</label><input type="text" id="profileNome" placeholder="George"/></div>
+      <div class="form-group"><label>Sobrenome</label><input type="text" id="profileSob" placeholder="L."/></div>
+    </div>
+    <div class="form-group"><label>E-mail</label><input type="email" id="profileEmail" placeholder="george@cronos.app"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Cargo</label><input type="text" id="profileCargo" placeholder="Admin"/></div>
+      <div class="form-group"><label>Empresa</label><input type="text" id="profileEmpresa" placeholder="Cronos"/></div>
+    </div>
+    <div class="form-group"><label>Cor do avatar</label>
+      <select id="profileColor">
+        <option value="linear-gradient(135deg,#8b00e8,#5710d1)">Roxo</option>
+        <option value="linear-gradient(135deg,#0070e8,#00b4d8)">Azul</option>
+        <option value="linear-gradient(135deg,#00a855,#4fffb0)">Verde</option>
+        <option value="linear-gradient(135deg,#c47a00,#ffd84f)">Dourado</option>
+        <option value="linear-gradient(135deg,#a00030,#ff5e7e)">Vermelho</option>
+        <option value="linear-gradient(135deg,#006080,#5ec4ff)">Ciano</option>
+      </select>
+    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" data-close="modalProfile">Cancelar</button><button class="btn btn-primary" id="btnSalvarProfile">Salvar Perfil</button></div>
+  </div>
+</div>
+
+<!-- MODAL DETALHE PROJETO -->
 <div class="modal-overlay" id="modalDetalheProj">
   <div class="modal modal-lg">
     <div class="modal-header"><div class="modal-title" id="detProjNome">Projeto</div><div class="modal-close" data-close="modalDetalheProj">✕</div></div>
@@ -199,7 +304,7 @@
       <div class="detail-title">Membros do Projeto</div>
       <div class="detail-members-list" id="detProjMembros"></div>
       <div style="margin-top:.7rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
-        <select id="addMembroProj" style="background:rgba(20,0,55,.7);border:1px solid var(--borda);border-radius:8px;padding:.4rem .7rem;color:var(--texto);font-family:'Exo 2',sans-serif;font-size:.82rem;outline:none"><option value="">+ Adicionar membro...</option></select>
+        <select id="addMembroProj" style="background:rgba(20,0,55,.7);border:1px solid var(--borda);border-radius:8px;padding:.4rem .7rem;color:var(--texto);font-family:'Exo 2',sans-serif;font-size:.82rem;outline:none"><option value="">+ Adicionar membro ativo...</option></select>
         <button class="btn btn-primary btn-sm" id="btnAddMembroProj">Adicionar</button>
       </div>
     </div>
@@ -211,6 +316,7 @@
   </div>
 </div>
 
+<!-- MODAL DETALHE TAREFA -->
 <div class="modal-overlay" id="modalDetalheTarefa">
   <div class="modal">
     <div class="modal-header"><div class="modal-title" id="detTarefaTitulo">Tarefa</div><div class="modal-close" data-close="modalDetalheTarefa">✕</div></div>
@@ -223,6 +329,7 @@
   </div>
 </div>
 
+<!-- MODAL CONFIRMAR -->
 <div class="modal-overlay" id="modalConfirm">
   <div class="modal" style="max-width:380px">
     <div class="modal-header"><div class="modal-title" id="confirmTitle">Confirmar</div><div class="modal-close" data-close="modalConfirm">✕</div></div>
@@ -230,6 +337,82 @@
     <div class="modal-actions"><button class="btn btn-ghost" data-close="modalConfirm">Cancelar</button><button class="btn btn-danger" id="btnConfirmOk">Confirmar</button></div>
   </div>
 </div>
+
+<!-- MODAL CONVITE (simula o que o funcionário receberia) -->
+<div class="modal-overlay" id="modalInvite">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <div class="modal-title">✉ Convite Recebido</div>
+      <div class="modal-close" data-close="modalInvite">✕</div>
+    </div>
+
+    <div class="invite-card">
+      <div class="invite-logo">
+        <svg viewBox="0 0 38 38" fill="none" width="32" height="32">
+          <circle cx="19" cy="19" r="15" stroke="#fff7ab" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <circle cx="19" cy="19" r="8" stroke="#a86dff" stroke-width="1.2"/>
+          <circle cx="19" cy="19" r="2.5" fill="#fff7ab"/>
+        </svg>
+        <span>CRONOS</span>
+      </div>
+      <p class="invite-greeting">Você foi convidado(a) para ingressar na equipe!</p>
+      <div class="invite-info-grid">
+        <div class="invite-info-item">
+          <div class="invite-info-label">Nome</div>
+          <div class="invite-info-val" id="inviteMembroNome">—</div>
+        </div>
+        <div class="invite-info-item">
+          <div class="invite-info-label">Cargo</div>
+          <div class="invite-info-val" id="inviteMembroRole">—</div>
+        </div>
+        <div class="invite-info-item">
+          <div class="invite-info-label">E-mail</div>
+          <div class="invite-info-val" id="inviteMembroEmail">—</div>
+        </div>
+        <div class="invite-info-item">
+          <div class="invite-info-label">Token hash</div>
+          <div class="invite-info-val invite-hash" id="inviteMembroHash">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accept section -->
+    <div id="inviteAcceptSection">
+      <p style="font-size:.82rem;color:var(--texto-dim);text-align:center;margin-bottom:1.2rem">Ao aceitar, você confirma os dados acima e ingressa na plataforma Cronos.</p>
+      <div class="modal-actions" style="justify-content:center;gap:1rem">
+        <button class="btn btn-danger" id="btnRecusarConvite">✕ Recusar</button>
+        <button class="btn btn-primary" id="btnAceitarConvite" style="background:linear-gradient(135deg,#00a855,#4fffb0);color:#000">✓ Aceitar Convite</button>
+      </div>
+    </div>
+
+    <!-- Reject section -->
+    <div id="inviteRejectSection" style="display:none">
+      <div style="font-size:.85rem;font-weight:600;color:var(--vermelho);margin-bottom:.9rem;text-align:center">⚠ Por favor, informe o motivo da recusa</div>
+      <div class="form-group">
+        <label>Motivo</label>
+        <select id="recusaMotivo">
+          <option value="">Selecionar motivo...</option>
+          <option value="Atestado médico">Atestado médico</option>
+          <option value="Incompatibilidade de horário">Incompatibilidade de horário</option>
+          <option value="Já possuo vínculo empregatício">Já possuo vínculo empregatício</option>
+          <option value="Questões pessoais">Questões pessoais</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Detalhes <span style="color:var(--texto-dim);font-weight:400">(opcional)</span></label>
+        <textarea id="recusaDetalhes" placeholder="Descreva mais detalhes se desejar..." style="height:80px"></textarea>
+      </div>
+      <p style="font-size:.75rem;color:var(--texto-dim);margin-bottom:.9rem">O gerente responsável será notificado automaticamente.</p>
+      <div class="modal-actions" style="justify-content:space-between">
+        <button class="btn btn-ghost" id="btnCancelarRecusa">← Voltar</button>
+        <button class="btn btn-danger" id="btnConfirmarRecusa">Confirmar Recusa</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script src="./script.js"></script>
 </body>
 </html>
