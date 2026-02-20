@@ -4,7 +4,6 @@
 
 Este repositório apresenta o protótipo da tela inicial do Projeto Cronos, desenvolvido em HTML e CSS com finalidade estrutural e visual.
 
-A etapa atual corresponde à modelagem da interface e servirá como base para a futura migração para Vue.js.
 
 ---
 
